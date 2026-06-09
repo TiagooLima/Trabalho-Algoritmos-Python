@@ -1,18 +1,95 @@
+from rich import print
+
 opcao = -1
-usuario_correto = "Tiago"
-senha_correta = "123"
 saldoDaConta = 1000
 limiteUsuario = 500
 
 
+
+############ ADMIN
+# Seleciona se é usuario normal ou Administrador
+# Admin coloca suas credenciais
+# Acessa um menu diferente de um usuário normal
+# Menu administrador deve consultar e atualizar os dados de todos os clientes do banco
+# Loop até ele sinalizar que deseja sair do programa
+
+############ USUARIOS
+# Modificar o sistema de arquivamentos de usuarios de forma que uma pessoa possa ter suas informações dentro de um array
+# Admin deve poder acessar esse array depois para mudar ou consultar informações
+# Array usuario deve conter: usuário, senha, saldo, limite
+
+usuarios = []
+usuarios_admin = [{"Nome": "Admin", "Senha": "123A"}]
 while True:
     try:
-        print("[1] - Acessar")
+        print("bem vindo ao banco [bold green]UNIVILLE[/bold green]")
+
+        print("[1] - Fazer Log In")
+        print("[2] - Criar Conta")
+        print("[3] - Painel de Administrador")
         print("[0] - Encerrar sistema")
 
         opcao = int(input("Escolha um opcao: "))
-        if opcao == 1:
+
+        #Criação de conta
+        if opcao == 2:
+            print("Painel de criação de conta")
+            nomeCriado = input('Digite o seu usuário de acesso: ')
+            senhaCriada = input('Digite sua senha')
+            senhaConfirmar = input('Confirme sua senha')
+
+            while senhaCriada != senhaConfirmar:
+                print('As senha digitas devem ser iguais, insira novamente:')
+                senhaCriada = input('Digite sua senha: ')
+                senhaConfirmar = input('Confirme sua senha: ')
+        
+            usuarios.insert(len(usuarios)-1, {"Nome": nomeCriado, "Senha": senhaCriada, "Saldo": 0, "Limite": 0, "Admin": 0})
+            continue
+
+
+        if opcao == 3:
+            usuarioAdmin = input("Digite o nome de usuario de admin: ")
+            senha = input("Digite sua senha: ")
+
+            resultado = 0
+            for c in usuarios_admin:
+                if usuarioAdmin == c["Nome"] and senha == c["Senha"]:
+                    resultado = 1
+                    break
+    
+            if resultado == 1:
+                print('Painel Admin - Seja bem vindo')
+                print("[1] - Consultar Usuários")
+                print("[2] - Atualizar dados de Clientes")
+                opcao = int(input("Escolha um opcao: "))
+
+                if opcao == 1:
+                    print('Quantidade de usuários:', len(usuarios))
+                    for c in usuarios:
+                        print(f'Nome: {c["Nome"]}\nSenha: {c["Senha"]} Saldo: {c["Saldo"]} Limite: {c["Limite"]}\n')
+                
+                #Atualizar > perguntar o nome do cliente > Verificar se o cliente ta dentro da array > Se estiver,
+                # perguntar o que deseja mudar > Input com a nova informação > Inserir Usuário Atualizado no mesmo indice
+                # if opcao == 2:
+                #     print("Atualizar usuarios")
+                #     for c in usuarios:
+                #         pesquisaUsuario ==
+                    
+            else:
+                print('Usuário inválido para o painel de administrados, contate o suporte para mais informações')
+                continue
+
+
+            
+                    
+
+                    
+
+            
+
+        elif opcao == 1:
             print("Sistema foi iniciado")
+        
         elif opcao == 0:
             print("Sistema encerrado")
             break
@@ -24,7 +101,6 @@ while True:
         continue
 
 #TENTIVAS
-
     tentativas = 3
     acesso = False
         
@@ -47,7 +123,6 @@ while True:
                 print("Programa encerrado\n")
                 exit()
                 
-
 
     if acesso:
         while True:
@@ -103,6 +178,3 @@ while True:
                 
             except ValueError:
                 print("Digite apenas numeros")
-
-            
-                   
