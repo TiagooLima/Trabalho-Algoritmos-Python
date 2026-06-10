@@ -1,10 +1,5 @@
 from rich import print
-
-opcao = -1
-saldoDaConta = 1000
-limiteUsuario = 500
-
-
+import time
 
 ############ ADMIN
 # Seleciona se é usuario normal ou Administrador
@@ -20,9 +15,10 @@ limiteUsuario = 500
 
 usuarios = []
 usuarios_admin = [{"Nome": "Admin", "Senha": "123A"}]
-while True:
+condicaoDeExecucao = True
+while condicaoDeExecucao:
     try:
-        print("bem vindo ao banco [bold green]UNIVILLE[/bold green]")
+        print("Bem vindo ao banco [bold green]UNIVILLE[/bold green]")
 
         print("[1] - Fazer Log In")
         print("[2] - Criar Conta")
@@ -30,13 +26,39 @@ while True:
         print("[0] - Encerrar sistema")
 
         opcao = int(input("Escolha um opcao: "))
+        
+        if opcao == 1:
+            # Login de conta
+            tentativas = 3
+            acesso = False
+            
 
-        #Criação de conta
-        if opcao == 2:
+            while tentativas > 0 and acesso != True:
+                usuario = input("Digite o nome de usuario: ")
+                senha = input("Digite sua senha: ")
+
+                for c in usuarios:
+                    if c["Nome"] == usuario and c["Senha"] == senha:
+                        acesso = True
+                        print("Login realizado com sucesso\n")
+                        condicaoDeExecucao = False
+                        break
+                else:
+                    tentativas -= 1
+                    if tentativas > 0:
+                        print("\nUsuario ou Senha invalida")
+                        print(f"RESTAM {tentativas} TENTATIVA(s)!\n")
+                    else:
+                        print("\nNumero de tentativas esgotado")
+                        print("Programa encerrado\n")
+                        exit()
+            
+        elif opcao == 2:
+            #Criação de conta
             print("Painel de criação de conta")
             nomeCriado = input('Digite o seu usuário de acesso: ')
-            senhaCriada = input('Digite sua senha')
-            senhaConfirmar = input('Confirme sua senha')
+            senhaCriada = input('Digite sua senha: ')
+            senhaConfirmar = input('Confirme sua senha: ')
 
             while senhaCriada != senhaConfirmar:
                 print('As senha digitas devem ser iguais, insira novamente:')
@@ -45,10 +67,10 @@ while True:
         
             usuarios.insert(len(usuarios)-1, {"Nome": nomeCriado, "Senha": senhaCriada, "Saldo": 0, "Limite": 0, "Admin": 0})
             continue
-
-
-        if opcao == 3:
-            usuarioAdmin = input("Digite o nome de usuario de admin: ")
+            
+        elif opcao == 3:
+            # Painel Admin
+            usuarioAdmin = input("Digite o nome de usuário de admin: ")
             senha = input("Digite sua senha: ")
 
             resultado = 0
@@ -56,40 +78,79 @@ while True:
                 if usuarioAdmin == c["Nome"] and senha == c["Senha"]:
                     resultado = 1
                     break
-    
-            if resultado == 1:
-                print('Painel Admin - Seja bem vindo')
-                print("[1] - Consultar Usuários")
-                print("[2] - Atualizar dados de Clientes")
-                opcao = int(input("Escolha um opcao: "))
-
-                if opcao == 1:
-                    print('Quantidade de usuários:', len(usuarios))
-                    for c in usuarios:
-                        print(f'Nome: {c["Nome"]}\nSenha: {c["Senha"]} Saldo: {c["Saldo"]} Limite: {c["Limite"]}\n')
-                
-                #Atualizar > perguntar o nome do cliente > Verificar se o cliente ta dentro da array > Se estiver,
-                # perguntar o que deseja mudar > Input com a nova informação > Inserir Usuário Atualizado no mesmo indice
-                # if opcao == 2:
-                #     print("Atualizar usuarios")
-                #     for c in usuarios:
-                #         pesquisaUsuario ==
                     
+            condicao = True
+            if resultado == 1:
+                while condicao:
+                    print('Painel [bold yellow]Admin[/bold yellow] - Seja bem vindo')
+                    print("[1] - Consultar Usuários")
+                    print("[2] - Atualizar dados de Clientes")
+                    print("[3] - Voltar para a página principal")
+                    print("[0] - Sair do sistema")
+                    opcao = int(input("Escolha uma opcão: "))
+
+                    if opcao == 1:
+                        print('Quantidade de usuários:', len(usuarios))
+                        for c in usuarios:
+                            print(f'Nome: {c["Nome"]}\nSenha: {c["Senha"]}, Saldo: {c["Saldo"]}, Limite: {c["Limite"]}\n')
+                            break
+                        
+                    
+                    elif opcao == 2:
+                        usuarioDesejado = input('Digite o usuário que deseja alterar: ')
+                        indice = 0
+                        for c in usuarios:
+                            if c["Nome"] == usuarioDesejado:
+                                print('[blue]Usuário encontrado![/blue]')
+                                print("[1] - Nome")
+                                print("[2] - Senha")
+                                print("[3] - Saldo")
+                                print("[4] - Limite")
+                                
+                                opcaoDeAlteração = int(input('Digite a opção: '))
+                                if opcaoDeAlteração == 1:
+                                    nomeNovo = input('Digite o nome novo: ')
+                                    usuarios[indice]["Nome"] = nomeNovo
+                                    print('[green]Nome alterado![/green]')
+                                    time.sleep(1)
+                                    break
+                                elif opcaoDeAlteração == 2:
+                                    senhaNovo = input('Digite a senha nova: ')
+                                    usuarios[indice]["Senha"] = senhaNovo
+                                    print('[green]Senha alterada![/green]')
+                                    time.sleep(1)
+                                    break
+                                elif opcaoDeAlteração == 3:
+                                    saldoNovo = input('Digite o saldo novo: ')
+                                    usuarios[indice]["Saldo"] = saldoNovo
+                                    print('[green]Saldo alterado![/green]')
+                                    time.sleep(1)
+                                    break
+                                elif opcaoDeAlteração == 4:
+                                    LimiteNovo = input('Digite o novo Limite: ')
+                                    usuarios[indice]["Limite"] = LimiteNovo
+                                    print('[green]Limite alterado![/green]')
+                                    time.sleep(1)
+                                    break
+                                else:
+                                    print("[red]Opção inválida, sistema retornando ao painel admin[/red]")
+                                    break
+
+                            indice += 1
+                        else:
+                            print("[red]Usuário inválido[/red]")
+                    elif opcao == 3:
+                        condicao = False
+                        continue
+                    elif opcao == 0:
+                        print("Obrigado por usar o banco [bold green]UNIVILLE[/bold green]!")
+                        exit()
+                    else:
+                        print('Opção inválida')
+                        continue
             else:
                 print('Usuário inválido para o painel de administrados, contate o suporte para mais informações')
-                continue
-
-
-            
-                    
-
-                    
-
-            
-
-        elif opcao == 1:
-            print("Sistema foi iniciado")
-        
+                continue        
         elif opcao == 0:
             print("Sistema encerrado")
             break
@@ -99,82 +160,71 @@ while True:
     except ValueError:
         print("Opcao invalida")
         continue
-
-#TENTIVAS
-    tentativas = 3
-    acesso = False
-        
-    while tentativas > 0:
-        usuario = str(input("Digite o nome de usuario: "))
-        senha = input("Digite sua senha: ")
-        
-
-        if usuario == usuario_correto and senha == senha_correta:
-            print("Login realizado com sucesso\n")
-            acesso = True
-            break
-        else:
-            tentativas -= 1
-            if tentativas > 0:
-                print("Usuario ou Senha invalida")
-                print(f"\nRESTAM {tentativas} TENTATIVA(s)!\n")
-            else:
-                print("\nNumero de tentativas esgotado")
-                print("Programa encerrado\n")
-                exit()
                 
-
-    if acesso:
-        while True:
-            try:
-                print("====- UNIVILLE Internet Banking -====\n")
-                    #Menu
-                    
-
-                print(
-                    '[1] - Consultar Saldo \n[2] - Realizar Saque \n[3] - Realizar depósito \n[4] - Consultar Limite \n[5] - Encerrar'
-                )
-                
-                opcaoMenu = int(input('Escolha sua opção: '))
-
-                    #Opção consultar saldo
-                if opcaoMenu == 1:
-                    print(f'\nSaldo: R${saldoDaConta:.2f}\n')
-                    
-                #Opção realizar saque
-                elif opcaoMenu == 2:
-                    print(f'Saldo Atual: R${saldoDaConta:.2f}\n')
-                    valorSaque = int(input('Digite o valor do saque: '))
-                    
-                    if valorSaque > saldoDaConta:
-                        print('Saldo insuficiente')
-                    else:
-                        saldoDaConta -= valorSaque
-                        print(f'Saque Realizado!\nSaldo atual: R${saldoDaConta:.2f}\n')
-
-                    #Opção realizar deposito
-                elif opcaoMenu == 3:
-                    print(f'Saldo Atual: R${saldoDaConta:.2f}\n')
-                    valorDeposito = float(input('Digite o valor do deposito: '))
-                    if valorDeposito <= 0:
-                        print('Número inválido')
-                        exit()
-                    else:
-                        saldoDaConta += valorDeposito
-                        print(f'Deposito realizado! \nSaldo Atual: R${saldoDaConta:.2f}\n')
-                  
-                    #Opcao consultar limite
-                      
-                elif opcaoMenu == 4:
-                    print(f'Limite atual: R${limiteUsuario:.2f}\n')
+    # Logo após a logar, acesso do usuário
+if acesso:
+    while True:
+        try:
+            #Armazenamento das informações do usuário no estado atual para facilitar consulta de limite ou de saldo
+            indice = 0
+            for c in usuarios:
+                if usuario == c["Nome"]:
+                    usuarioAtual = c
                     break
-                
-                #Encerrar
-                        
-                elif opcaoMenu == 5:
-                    print("Sistema encerrado")
-                    exit()           
+                indice += 1
+
+            print("\n==== [bold green]UNIVILLE[/bold green] [green]Internet Banking[/green] ====\n")
+                #Menu
+
+            print('[1] - Consultar Saldo \n[2] - Realizar Saque \n[3] - Realizar depósito \n[4] - Consultar Limite \n[5] - Encerrar')
+            
+            opcaoMenu = int(input('Escolha sua opção: '))
 
                 
-            except ValueError:
-                print("Digite apenas numeros")
+            if opcaoMenu == 1:
+                #Opção consultar saldo
+                print(f'Saldo atual: {usuarioAtual['Saldo']}')
+                time.sleep(2)
+                continue
+            
+            elif opcaoMenu == 2:
+                #Opção realizar saque
+                print(f'Saldo atual: {usuarioAtual['Saldo']}')
+                valorSaque = float(input('Digite o valor do saque: '))
+                
+                if valorSaque > usuarioAtual['Saldo']:
+                    print('Saldo insuficiente')
+                else:
+                    usuarios[indice]["Saldo"] = usuarioAtual["Saldo"] - valorSaque
+                    print(f'[green]Saque Realizado![/green]\nSaldo atual: R${usuarios[indice]["Saldo"]}')
+                    time.sleep(2)
+                    continue
+                
+            elif opcaoMenu == 3:
+                #Opção realizar deposito
+                print(f'Saldo atual: {usuarioAtual['Saldo']}')
+                valorDeposito = float(input('Digite o valor do deposito: '))
+
+                if valorDeposito <= 0:
+                    print('Número inválido')
+                    time.sleep(1)
+                    continue
+                else:
+                    usuarios[indice]["Saldo"] += valorDeposito
+                    print(f'[green]Deposito realizado![/green] \nSaldo Atual: R$ {usuarios[indice]["Saldo"]}')
+                    time.sleep(2)
+                    continue
+                    
+            elif opcaoMenu == 4:
+                #Opcao consultar limite
+                print(f'Limite atual: {usuarioAtual['Limite']}')
+                time.sleep(2)
+                continue
+            
+            #Encerrar
+                    
+            elif opcaoMenu == 5:
+                print("[red]Sistema encerrado[/red]")
+                exit()           
+        except ValueError:
+            print("Digite apenas numeros")
