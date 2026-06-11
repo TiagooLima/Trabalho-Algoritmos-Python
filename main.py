@@ -94,9 +94,11 @@ while condicaoDeExecucao:
                         for c in usuarios:
                             print(f'Nome: {c["Nome"]}\nSenha: {c["Senha"]}, Saldo: {c["Saldo"]}, Limite: {c["Limite"]}\n')
                             break
-                        
                     
                     elif opcao == 2:
+                        if len(usuarios) == 0:
+                            print("[red]Nenhum usuário cadastrado no sistema[/red]")
+                            continue
                         usuarioDesejado = input('Digite o usuário que deseja alterar: ')
                         indice = 0
                         for c in usuarios:
@@ -139,6 +141,7 @@ while condicaoDeExecucao:
                             indice += 1
                         else:
                             print("[red]Usuário inválido[/red]")
+                            continue
                     elif opcao == 3:
                         condicao = False
                         continue
@@ -146,8 +149,8 @@ while condicaoDeExecucao:
                         print("Obrigado por usar o banco [bold green]UNIVILLE[/bold green]!")
                         exit()
                     else:
-                        print('Opção inválida')
-                        continue
+                        print('[red]Opção inválida[/red]')
+                        break
             else:
                 print('Usuário inválido para o painel de administrados, contate o suporte para mais informações')
                 continue        
@@ -158,7 +161,7 @@ while condicaoDeExecucao:
             print("Opcao invalida")
             continue
     except ValueError:
-        print("Opcao invalida")
+        print("[bold red]Erro![/bold red][red], não utilize letras em opções númericas\nRetornando ao painel inicial[/red]")
         continue
                 
     # Logo após a logar, acesso do usuário
@@ -193,7 +196,7 @@ if acesso:
                 valorSaque = float(input('Digite o valor do saque: '))
                 
                 if valorSaque > usuarioAtual['Saldo']:
-                    print('Saldo insuficiente')
+                    print('[red]Saldo insuficiente[/red]')
                 else:
                     usuarios[indice]["Saldo"] = usuarioAtual["Saldo"] - valorSaque
                     print(f'[green]Saque Realizado![/green]\nSaldo atual: R${usuarios[indice]["Saldo"]}')
@@ -220,11 +223,9 @@ if acesso:
                 print(f'Limite atual: {usuarioAtual['Limite']}')
                 time.sleep(2)
                 continue
-            
-            #Encerrar
                     
             elif opcaoMenu == 5:
                 print("[red]Sistema encerrado[/red]")
                 exit()           
         except ValueError:
-            print("Digite apenas numeros")
+            print("[bold red]Erro![/bold red][red], não utilize letras em opções númericas")
